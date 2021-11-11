@@ -61,7 +61,8 @@ class _CountryDropDownState extends State<CountryDropDown> {
                         : _prefs.getString('country') == 'Spain' ? countries[1]
                         : countries[0],
                     onChanged: (Country? value) {
-                      setState(() {
+                      if(mounted) {
+                        setState(() {
                         selectedCountry = value!;
                         if(value.name == 'England'){
                           context.setLocale(const Locale('en'));
@@ -74,6 +75,7 @@ class _CountryDropDownState extends State<CountryDropDown> {
                           _prefs.setString('country', 'Spain');
                         }
                       });
+                      }
                     },
                     items: countries.map((Country country) {
                       return  DropdownMenuItem<Country>(

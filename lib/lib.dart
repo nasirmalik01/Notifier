@@ -7,5 +7,4 @@ abstract class  LocaleKeys {
   static const remainingBattery = 'remainingBattery';
   static const activateClutch = 'activateClutch';
   static const deActivateClutch = 'deActivateClutch';
-
 }

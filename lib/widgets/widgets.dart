@@ -3,9 +3,11 @@ import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:notifier_app/consts/colors.dart';
 import 'package:notifier_app/consts/config.dart';
 import 'package:notifier_app/lib.dart';
+import 'package:notifier_app/view_model/admob_service.dart';
 
 Widget notifyTextWidget(){
   return Container(
@@ -76,10 +78,12 @@ Widget activateButton({String? text, Function()? onPress}){
 }
 
 Widget showAd(){
-  return   Container(
-    color: Colors.white30,
+  return SizedBox(
     width: double.infinity,
     height: 70,
-    child: const Center(child: Text('AD')),
+    child: AdWidget(
+      key: UniqueKey(),
+      ad: AdMobService.createBannerAd()..load(),
+    ),
   );
 }

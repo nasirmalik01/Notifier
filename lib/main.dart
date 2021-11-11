@@ -2,6 +2,7 @@ import 'package:battery/battery.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:notifier_app/codegen_loader.g.dart';
 import 'package:notifier_app/consts/colors.dart';
 import 'package:notifier_app/consts/strings.dart';
@@ -18,6 +19,7 @@ final method = Method();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await MobileAds.instance.initialize();
   await Firebase.initializeApp();
   Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher

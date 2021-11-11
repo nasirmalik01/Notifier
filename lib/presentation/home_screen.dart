@@ -3,11 +3,14 @@ import 'dart:io';
 
 import 'package:battery/battery.dart';
 import 'package:device_info/device_info.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:notifier_app/consts/colors.dart';
 import 'package:notifier_app/lib.dart';
 import 'package:notifier_app/presentation/country_drop_down.dart';
+import 'package:notifier_app/view_model/admob_service.dart';
 import 'package:notifier_app/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,11 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void listenBatteryState() =>
-      subscription = battery.onBatteryStateChanged.listen(
-            (batteryState) => setState(() => this.batteryState = batteryState),
+      subscription = battery.onBatteryStateChanged.listen((batteryState) {
+        if (mounted) {
+                setState(() => this.batteryState = batteryState);
+              }
+            }
       );
 
-  void listenBatteryLevel() {
+  Future<void> listenBatteryLevel() async {
     updateBatteryLevel();
     timer = Timer.periodic(const Duration(seconds: 10), (_) async => updateBatteryLevel(),
     );
@@ -47,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future updateBatteryLevel() async {
     final batteryLevel = await battery.batteryLevel;
-    setState(() => this.batteryLevel = batteryLevel);
+    if(mounted){
+      setState(() => this.batteryLevel = batteryLevel);
+    }
   }
 
   Future<void> getPrefs() async {
@@ -55,9 +63,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if(_prefs.getString('device_id') == null){
       return;
     }
-    setState(() => _deviceId = _prefs.getString('device_id')!);
+    if(mounted){
+      setState(() => _deviceId = _prefs.getString('device_id')!);
+    }
   }
-
 
   @override
   void dispose() {
@@ -80,7 +89,14 @@ class _HomeScreenState extends State<HomeScreen> {
           activateButton(text: _deviceId == '' ? LocaleKeys.activateClutch.tr() : LocaleKeys.deActivateClutch.tr(),
               onPress: activateClutch
           ),
-          showAd()
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            child: AdWidget(
+              key: UniqueKey(),
+              ad: AdMobService.createBannerAd()..load(),
+            ),
+          ),
         ],
       ),
     );
@@ -89,25 +105,31 @@ class _HomeScreenState extends State<HomeScreen> {
   activateClutch() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     if(_deviceId != ''){
-      setState(() {
+      if(mounted) {
+        setState(() {
         _prefs.setString('device_id', '');
         _deviceId = '';
       });
+      }
       return;
     }
     var deviceInfo = DeviceInfoPlugin();
     if(Platform.isAndroid){
       var androidDeviceInfo = await deviceInfo.androidInfo;
       _prefs.setString('device_id', androidDeviceInfo.id);
-      setState(() {
+      if(mounted) {
+        setState(() {
         _deviceId = _prefs.getString('device_id')!;
       });
+      }
     } else if(Platform.isIOS){
       var iOSDeviceInfo = await deviceInfo.iosInfo;
       _prefs.setString('device_id', iOSDeviceInfo.model);
-      setState(() {
+      if(mounted) {
+        setState(() {
         _deviceId = _prefs.getString('device_id')!;
       });
+      }
     }
   }
 }
