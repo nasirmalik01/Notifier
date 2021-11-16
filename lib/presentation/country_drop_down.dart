@@ -2,6 +2,7 @@ import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:notifier_app/consts/assets.dart';
+import 'package:notifier_app/consts/colors.dart';
 import 'package:notifier_app/consts/config.dart';
 import 'package:notifier_app/model/country.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,9 +23,9 @@ class _CountryDropDownState extends State<CountryDropDown> {
   late SharedPreferences _prefs;
 
   List<Country> countries =[
-    const Country(Image(image: AssetImage(englishFlag), height: 30,), 'England'),
-    const Country(Image(image:AssetImage(spanishFlag), height: 30,), 'Spain'),
-    const Country(Image(image: AssetImage(chineseFlag), height: 30,), 'China'),
+    const Country(Image(image: AssetImage(englishFlag), height: 30,), 'En'),
+    const Country(Image(image:AssetImage(spanishFlag), height: 30,), 'Es'),
+    const Country(Image(image: AssetImage(chineseFlag), height: 30,), 'Zh'),
     // const Item('iOS',Icon(Icons.mobile_screen_share,color:  const Color(0xFF167F67),)),
   ];
 
@@ -55,6 +56,7 @@ class _CountryDropDownState extends State<CountryDropDown> {
                 child:  DropdownButtonHideUnderline(
                   child: DropdownButton<Country>(
                     // iconEnabledColor: Colors.white30,
+                    dropdownColor: backColor,
                     hint: const Text(''),
                     value:  _prefs.getString('country') == null ? selectedCountry ?? countries[0]
                         : _prefs.getString('country') == 'China' ? countries[2]
@@ -64,10 +66,10 @@ class _CountryDropDownState extends State<CountryDropDown> {
                       if(mounted) {
                         setState(() {
                         selectedCountry = value!;
-                        if(value.name == 'England'){
+                        if(value.name == 'En'){
                           context.setLocale(const Locale('en'));
                           _prefs.setString('country', 'England');
-                        }else if(value.name == 'China'){
+                        }else if(value.name == 'Zh'){
                           context.setLocale(const Locale('zh'));
                           _prefs.setString('country', 'China');
                         }else{
@@ -80,7 +82,15 @@ class _CountryDropDownState extends State<CountryDropDown> {
                     items: countries.map((Country country) {
                       return  DropdownMenuItem<Country>(
                         value: country,
-                        child: country.icon,
+                        child: Row(
+                          children: [
+                            country.icon,
+                            const SizedBox(width: 10,),
+                            Text(country.name, style: const TextStyle(
+                              color: Colors.white
+                            ),)
+                          ],
+                        ),
                       );
                     }).toList(),
                   ),

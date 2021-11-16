@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService{
-  static String get bannerAdUnitId => Platform.isAndroid ? 'ca-app-pub-3180283244987367/6652088624' :
+  static String get bannerAdUnitId => Platform.isAndroid ? 'ca-app-pub-3940256099942544/6300978111' :
       '';
 
   static initialize() async {

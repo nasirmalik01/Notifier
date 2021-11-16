@@ -20,7 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await MobileAds.instance.initialize();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher
       isInDebugMode: false // This should be false
@@ -45,17 +45,22 @@ Future<void> main() async {
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     print(TAG + " callbackDispatcher");
-    await Firebase.initializeApp();
+    // WidgetsFlutterBinding.ensureInitialized();
+    // await Firebase.initializeApp();
     final batteryLevel = await battery.batteryLevel;
-    method.storeBatteryLevelToDb(batteryLevel: batteryLevel);
-    int batteryPercentage = await method.getBatteryLevel();
-    int batteryPercentage2 = await method.getBatteryLevel();
+    // method.storeBatteryLevelToDb(batteryLevel: batteryLevel);
+    // int batteryPercentage = await method.getBatteryLevel();
+    // int batteryPercentage2 = await method.getBatteryLevel();
 
     SharedPreferences _prefs = await SharedPreferences.getInstance();
+    await _prefs.setInt('battery_per', batteryLevel);
+    int? batteryPercentage = _prefs.getInt('battery_per');
+
+    print("BATTERY: $batteryPercentage");
     if(_prefs.getString('device_id') != null){
       String? _deviceId = _prefs.getString('device_id');
       if(_deviceId != ''){
-        if(batteryPercentage < 2){
+        if(batteryPercentage! < 2){
           await method.playSoundLessThan2();
           method.showNotification(text: 'Charge Your Phone! Your phone battery is $batteryPercentage%');
         }
@@ -63,7 +68,7 @@ void callbackDispatcher() {
           await method.playSoundLessThan4();
           method.showNotification(text: 'Charge Your Phone! Your phone battery is $batteryPercentage%');
         }
-        else if(batteryPercentage < 6){
+        else if(batteryPercentage < 99){
           await method.playSoundLessThan6();
           method.showNotification(text: 'Charge Your Phone! Your phone battery is $batteryPercentage%');
         }
