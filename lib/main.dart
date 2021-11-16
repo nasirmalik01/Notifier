@@ -68,7 +68,7 @@ void callbackDispatcher() {
           await method.playSoundLessThan4();
           method.showNotification(text: 'Charge Your Phone! Your phone battery is $batteryPercentage%');
         }
-        else if(batteryPercentage < 99){
+        else if(batteryPercentage < 6){
           await method.playSoundLessThan6();
           method.showNotification(text: 'Charge Your Phone! Your phone battery is $batteryPercentage%');
         }

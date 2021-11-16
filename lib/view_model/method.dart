@@ -34,8 +34,8 @@ class Method{
           icon: '@mipmap/ic_launcher',
           playSound: true,
           sound: const RawResourceAndroidNotificationSound('noti_sound'),
-          // importance: Importance.max,
-          // priority: Priority.high,
+          importance: Importance.max,
+          priority: Priority.high,
         ),
       ),
     );
